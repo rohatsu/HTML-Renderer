@@ -122,21 +122,49 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 else
                 {
                     // solid/dotted/dashed border draw as simple line
-                    var pen = GetPen(g, style, color, GetWidth(border, box));
-                    switch (border)
+                    var width = GetWidth(border, box);
+                    if (style == "double")
                     {
-                        case Border.Top:
-                            g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Top + box.ActualBorderTopWidth / 2, rect.Right - 1, rect.Top + box.ActualBorderTopWidth / 2);
-                            break;
-                        case Border.Left:
-                            g.DrawLine(pen, rect.Left + box.ActualBorderLeftWidth / 2, Math.Ceiling(rect.Top), rect.Left + box.ActualBorderLeftWidth / 2, Math.Floor(rect.Bottom));
-                            break;
-                        case Border.Bottom:
-                            g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Bottom - box.ActualBorderBottomWidth / 2, rect.Right - 1, rect.Bottom - box.ActualBorderBottomWidth / 2);
-                            break;
-                        case Border.Right:
-                            g.DrawLine(pen, rect.Right - box.ActualBorderRightWidth / 2, Math.Ceiling(rect.Top), rect.Right - box.ActualBorderRightWidth / 2, Math.Floor(rect.Bottom));
-                            break;
+                        width = width / 3.0;
+                    }
+                    var pen = GetPen(g, style, color, width);
+
+                    if (style == "double")
+                    {
+                        switch (border)
+                        {
+                            case Border.Top:
+                                g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Top + box.ActualBorderTopWidth / 2, rect.Right - 1, rect.Top + box.ActualBorderTopWidth / 2);
+                                g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Top + box.ActualBorderTopWidth / 2 + 2, rect.Right - 1, rect.Top + box.ActualBorderTopWidth / 2 + 2);
+                                break;
+                            case Border.Left:
+                                g.DrawLine(pen, rect.Left + box.ActualBorderLeftWidth / 2, Math.Ceiling(rect.Top), rect.Left + box.ActualBorderLeftWidth / 2, Math.Floor(rect.Bottom));
+                                break;
+                            case Border.Bottom:
+                                g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Bottom - box.ActualBorderBottomWidth / 2, rect.Right - 1, rect.Bottom - box.ActualBorderBottomWidth / 2);
+                                g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Bottom - box.ActualBorderBottomWidth / 2 - 2, rect.Right - 1, rect.Bottom - box.ActualBorderBottomWidth / 2 - 2);
+                                break;
+                            case Border.Right:
+                                g.DrawLine(pen, rect.Right - box.ActualBorderRightWidth / 2, Math.Ceiling(rect.Top), rect.Right - box.ActualBorderRightWidth / 2, Math.Floor(rect.Bottom));
+                                break;
+                        }
+                    } else
+                    {
+                        switch (border)
+                        {
+                            case Border.Top:
+                                g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Top + box.ActualBorderTopWidth / 2, rect.Right - 1, rect.Top + box.ActualBorderTopWidth / 2);
+                                break;
+                            case Border.Left:
+                                g.DrawLine(pen, rect.Left + box.ActualBorderLeftWidth / 2, Math.Ceiling(rect.Top), rect.Left + box.ActualBorderLeftWidth / 2, Math.Floor(rect.Bottom));
+                                break;
+                            case Border.Bottom:
+                                g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Bottom - box.ActualBorderBottomWidth / 2, rect.Right - 1, rect.Bottom - box.ActualBorderBottomWidth / 2);
+                                break;
+                            case Border.Right:
+                                g.DrawLine(pen, rect.Right - box.ActualBorderRightWidth / 2, Math.Ceiling(rect.Top), rect.Right - box.ActualBorderRightWidth / 2, Math.Floor(rect.Bottom));
+                                break;
+                        }
                     }
                 }
             }
@@ -290,6 +318,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     break;
                 case "dotted":
                     p.DashStyle = RDashStyle.Dot;
+                    break;
+                case "double":
+                    p.DashStyle = RDashStyle.Solid;
                     break;
                 case "dashed":
                     p.DashStyle = RDashStyle.Dash;
